@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"></script>
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<title>Add/Delete Student</title>
+	</head>
+	<body>
+		<div class="jumbotron text-center">
+			<h1 class="h1-hover-change">Add or Delete a Student</h1>
+		</div>
+
+        {% if noUser %}
+            <div class="alert alert-danger" role="alert">
+              No deletion made. You must make sure the student's data is correct with their corresponding Student ID. Please try again.
+            </div>
+        {% endif %}
+
+		<form class="container-fluid" action="/add_delete_student" method="POST">
+          <div class="form-group">
+            <label for="fNameInput">Enter First Name</label>
+            <input type="text" class="form-control" id="fNameInput" name="fNameInput" placeholder="Student's First Name" required>
+          </div>
+          <div class="form-group">
+            <label for="lNameInput">Enter Last Name</label>
+            <input type="text" class="form-control" id="lNameInput" name="lNameInput" placeholder="Student's Last Name" required>
+          </div>
+          <div class="form-group">
+            <label for="majorInput">Enter Major</label>
+            <input type="text" class="form-control" id="majorInput" name="majorInput" placeholder="Student's Major" required>
+          </div>
+          <div class="form-group">
+            <label for="emailInput">Enter Email</label>
+            <input type="email" class="form-control" id="emailInput" name="emailInput" placeholder="Student's Email" required>
+          </div>
+          <div class="form-check">
+              <input class="form-check-input" type="radio" name="addDelRad" id="addStudRad" value="add" checked>
+              <label class="form-check-label" for="addStudRad">
+                Add Student
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="addDelRad" id="delStudRad" value="delete">
+              <label class="form-check-label" for="delStudRad">
+                Delete Student
+              </label>
+            </div><br>
+            <div class="form-group">
+                <label for="delStudId">Select the Student ID of the student you want to delete. <small>(if you leave the radio button on Add, the ID will be ignored)</small></label>
+                <select class="form-control" id="delStudId" name="delStudId">
+                    {% for student in students %}
+                        <option>{{ student.studentId }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+          <button type="submit" class="btn btn-primary" id="addStudentBtn">Add/Delete a Student</button>
+        </form>
+
+		<div class="container-fluid text-center">
+			<table class="table table-striped table-dark">
+				<!-- have a user enter a first and last name. search database.. if found, then ask if you want to delete student. if not found, ask if you want to add student -->
+				<thead>
+					<tr>
+						<th scope="col">Student ID</th>
+						<th scope="col">First Name</th>
+						<th scope="col">Last Name</th>
+						<th scope="col">Major</th>
+						<th scope="col">Email Address</th>
+					</tr>
+				</thead>
+				<tbody>
+				    {% for student in students %}
+    					<tr>
+    						<th scope="row">{{ student.studentId }}</th>
+    						<td>{{ student.firstName }}</td>
+    						<td>{{ student.lastName }}</td>
+    						<td>{{ student.studentMajor }}</td>
+    						<td>{{ student.studentEmail }}</td>
+    						<td></td>
+    					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
