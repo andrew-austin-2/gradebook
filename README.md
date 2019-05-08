@@ -1,17 +1,19 @@
-# gradebook
+# Objectives
 
-Objectives
 The IS 668 class project is designed to provide graduate students with the opportunity to exercise the following skills:
-Working together in a small team setting
-Performing independent research on technical topics
-Practice source code control using github
-Integrate many of the technologies used in IS 668 in a single project
-Python
-Web Development Frameworks (Flask)
-HTML and CSS, Bootstrap
-Data Base Management
-Details
+  1. Working together in a small team setting
+  2. Performing independent research on technical topics
+  3. Practice source code control using github
+  4. Integrate many of the technologies used in IS 668 in a single project
+     1. Python
+     2. Web Development Frameworks (Flask)
+     3. HTML and CSS, Bootstrap
+     4. Data Base Management
+     
+# Details
+
 The project objective is to build a web application that provides the functionality of classroom gradebook, similar, in concept, to the gradebook we commonly use in class. This is a student project - there is no expectation of a professional gradebook. The gradebook shall have the following Basic characteristics and requirements. To receive a grade of B in the project, all Basic Requirements must be implemented.
+
 The project must be deployed on pythonanywhere. If need be, create a team account so that multiple team members can access the account.
 The capability to add a student to the class
 The capability to delete a student from the class
