@@ -58,9 +58,11 @@ def login():
     return 'login here.'
 
 #andrew
-@app.route('/roster')
+@app.route('/roster', methods=["GET", "POST"])
 def roster():
-    return render_template('roster.html')
+    if request.method == 'GET':
+        # grades will be ordered by the assignmentID so that no matter what order the assignments the students have are created in, it will be in the right order
+        return render_template("roster.html", students=Student.query.all(), grades=Grade.query.order_by(Grade.assignmentId).all(), assignments=Assignment.query.all())
 
 #andrew
 @app.route('/edit_grades', methods=["GET", "POST"])
@@ -92,11 +94,7 @@ def editGrades():
     else:
         #there was already a grade for that assignment and user with the same grade.
         gradeToChange = False
-
-
         return render_template('edit_grades.html', gradeToChange=gradeToChange, students=Student.query.all(), grades=Grade.query.all(), assignments=Assignment.query.all())
-    #assignment = Assignment(assignmentId=assignmentID)
-    #grade = Grade()
 
     return redirect(url_for('editGrades'))
 
