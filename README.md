@@ -38,13 +38,16 @@ The gradebook shall have the following Advanced characteristics and requirements
 * The capability to display the data (all grades and other data) for a single student
 
 Optional Challenge: The ability for more than one user to simultaneously access the gradebook. You will need to do independent research on the Flask Session.
-GitHub
+
+# GitHub
 Each team is required to create an account on GitHub . You are required to put all code, templates and other resources on this github account. If need be, create a team account so that multiple team members can access the account.
-Submission
+
+# Submission
 You are required to submit the following to Blackboard.
-A link to your team github account
-A link to your pythonanywhere project
-A 3 to 5 page write up describing the overall structure of your project, team member contributions and responsibilities, testing methodology, and any other design detail you think is relevant. Please include the database structure you chose (it is assumed that it will be a simple structure). As you proceed with the project, you will have many questions that are not addressed by the requirements and capabilities specified above - as is almost always the case in development projects. It is left to you to make these decisions. Please specify the decisions you made in your write up.
-The project is worth 20% of your grade. Both team members shall receive the same grade
-The project is due by 11:59 PM EST, May 22nd.
-Good luck and have fun!
+1. A link to your team github account
+2. A link to your pythonanywhere project
+3. A 3 to 5 page write up describing the overall structure of your project, team member contributions and responsibilities, testing methodology, and any other design detail you think is relevant. Please include the database structure you chose (it is assumed that it will be a simple structure). As you proceed with the project, you will have many questions that are not addressed by the requirements and capabilities specified above - as is almost always the case in development projects. It is left to you to make these decisions. Please specify the decisions you made in your write up.
+4. The project is worth 20% of your grade. Both team members shall receive the same grade
+5. The project is due by 11:59 PM EST, May 22nd.
+
+## Good luck and have fun!
