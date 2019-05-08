@@ -104,7 +104,7 @@ def editGrades():
 @app.route("/add_delete_student", methods=["GET", "POST"])
 def addDeleteStudent():
     if request.method == 'GET':
-        return render_template("add_delete_student.html", students=Student.query.all())
+        return render_template("add_delete_student.html", students=Student.query.all(), grades=Grade.query.all(), assignments=Assignment.query.all())
 
     if request.form["addDelRad"] == "add":
         student = Student(firstName=request.form["fNameInput"], lastName=request.form["lNameInput"], studentMajor=request.form["majorInput"], studentEmail=request.form["emailInput"])
