@@ -2,6 +2,8 @@
 # A very simple Flask Hello World app for you to get started with...
 
 from flask import Flask, redirect, render_template, request, url_for
+from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -23,6 +25,29 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+app.secret_key = "andrewandaustinarecool"
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(128))
+    password_hash = db.Column(db.String(128))
+
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+    def get_id(self):
+        return self.username
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter_by(username=user_id).first()
 
 class Student(db.Model):
     __tablename__ = "student"
@@ -48,18 +73,41 @@ class Grade(db.Model):
     grade = db.Column(db.Integer)
 
 
+#austin
+@app.route('/', methods=["GET", "POST"])
+def index():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if request.method == "GET":
+        return render_template("main_page.html")
+    return redirect(url_for('index'))
 
-@app.route('/')
-def hello_world():
-    return 'Hello from Flask!'
-
-@app.route('/login')
+@app.route("/login/", methods=["GET", "POST"])
 def login():
-    return 'login here.'
+    if request.method == "GET":
+        return render_template("login_page.html", error=False)
+
+    user = load_user(request.form["username"])
+    if user is None:
+        return render_template("login_page.html", error=True)
+
+    if not user.check_password(request.form["password"]):
+        return render_template("login_page.html", error=True)
+
+    login_user(user)
+    return redirect(url_for('index'))
+
+@app.route("/logout/")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 #andrew
 @app.route('/roster', methods=["GET", "POST"])
 def roster():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == 'GET':
         # grades will be ordered by the assignmentID so that no matter what order the assignments the students have are created in, it will be in the right order
         return render_template("roster.html", students=Student.query.all(), grades=Grade.query.order_by(Grade.assignmentId).all(), assignments=Assignment.query.all())
@@ -67,6 +115,8 @@ def roster():
 #andrew
 @app.route('/edit_grades', methods=["GET", "POST"])
 def editGrades():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template("edit_grades.html", students=Student.query.all(), grades=Grade.query.all(), assignments=Assignment.query.all())
     #can probably get rid of the first and last names. user can verify with the table below for the correct student based on the id
@@ -101,6 +151,9 @@ def editGrades():
 #andrew
 @app.route("/add_delete_student", methods=["GET", "POST"])
 def addDeleteStudent():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+    action = 0
     if request.method == 'GET':
         return render_template("add_delete_student.html", students=Student.query.all(), grades=Grade.query.all(), assignments=Assignment.query.all())
 
@@ -108,6 +161,7 @@ def addDeleteStudent():
         student = Student(firstName=request.form["fNameInput"], lastName=request.form["lNameInput"], studentMajor=request.form["majorInput"], studentEmail=request.form["emailInput"])
         db.session.add(student)
         db.session.commit()
+        action = 1 # action = 1 if you successfully add a user.
     else:
         delStudId = request.form["delStudId"]
         delStudfName = request.form["fNameInput"]
@@ -122,4 +176,4 @@ def addDeleteStudent():
             noUser = True
             return render_template('add_delete_student.html', noUser=noUser, students=Student.query.all())
 
-    return redirect(url_for('addDeleteStudent'))
+    return render_template('add_delete_student.html', action=action)
