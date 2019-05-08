@@ -49,7 +49,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="assignmentGrade">Enter Assignment Grade <small>(Give grades of 0 to 100.)</small></label>
+                <label for="assignmentGrade">Enter Assignment Grade <small>(Give grades of 0 to 100)</small></label>
                 <input type="number" class="form-control" id="assignmentGrade" name="assignmentGrade" placeholder="Assignment Grade" min="0" max="100" required>
             </div>
 
@@ -72,7 +72,44 @@
     						<th scope="row">{{ student.studentId }}</th>
     						<td>{{ student.firstName }}</td>
     						<td>{{ student.lastName }}</td>
+    					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 
+			<table class="table table-striped table-dark">
+				<thead>
+					<tr>
+						<th scope="col">Grade ID</th>
+						<th scope="col">Sudent ID</th>
+						<th scope="col">Assignment ID</th>
+						<th scope="col">Grades Earned</th>
+					</tr>
+				</thead>
+				<tbody>
+				    {% for grade in grades %}
+    					<tr>
+    						<th scope="row">{{ grade.gradeId }}</th>
+    						<td>{{ grade.studentId }}</td>
+    						<td>{{ grade.assignmentId }}</td>
+    						<td>{{ grade.grade }}</td>
+    					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<table class="table table-striped table-dark">
+				<thead>
+					<tr>
+						<th scope="col">Assignment ID</th>
+						<th scope="col">AssignmentName</th>
+					</tr>
+				</thead>
+				<tbody>
+				    {% for assignment in assignments %}
+    					<tr>
+    						<th scope="row">{{ assignment.assignmentId }}</th>
+    						<td>{{ assignment.assignmentName }}</td>
     					</tr>
 					{% endfor %}
 				</tbody>
