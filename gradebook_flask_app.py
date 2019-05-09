@@ -162,6 +162,7 @@ def addDeleteStudent():
         db.session.add(student)
         db.session.commit()
         action = 1 # action = 1 if you successfully add a user.
+        return render_template('add_delete_student.html', action=action, students=Student.query.all())
     else:
         delStudId = request.form["delStudId"]
         delStudfName = request.form["fNameInput"]
@@ -170,10 +171,27 @@ def addDeleteStudent():
         delStudEmail = request.form["emailInput"]
         deleteStudent = Student.query.filter_by(studentId=delStudId, firstName=delStudfName, lastName=delStudlName, studentMajor=delStudMaj, studentEmail=delStudEmail).first()
         if deleteStudent is not None:
-            db.session.delete(deleteStudent)
-            db.session.commit()
+            # need to see if the user has info in the grades table
+            # while the query is None, keep doing it
+            gradeExist = Grade.query.filter_by(studentId=delStudId).first()
+            if gradeExist is None:
+                    db.session.delete(deleteStudent)
+                    db.session.commit()
+                    action = 2 # action = 2 if you successfully delete a user
+            else:
+                while gradeExist is not None:
+                    #go and delete all the records from Grade that are for the delStudId
+                    deleteGrades = gradeExist
+                    db.session.delete(deleteGrades)
+                    gradeExist = Grade.query.filter_by(studentId=delStudId).first()
+                db.session.delete(deleteStudent)
+                db.session.commit() # only commits after all the grades were deleted and the student was deleted.
+                action = 3 # action = 3 if you delete the student and their grades
+            return render_template('add_delete_student.html', action=action, students=Student.query.all())
         else:
-            noUser = True
-            return render_template('add_delete_student.html', noUser=noUser, students=Student.query.all())
+            action = 4 # action = 4 if you couldn't delete the student because the info wasn't matching
+            return render_template('add_delete_student.html', action=action, students=Student.query.all())
+    return redirect(url_for('addDeleteStudent'))
 
-    return render_template('add_delete_student.html', action=action)
+
+
