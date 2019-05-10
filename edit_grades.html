@@ -31,6 +31,7 @@
 			<a class="nav-item nav-link" href="http://andrewaustin.pythonanywhere.com/add_delete_student">Add/Delete Student</a>
 			<a class="nav-item nav-link active" href="http://andrewaustin.pythonanywhere.com/edit_grades">Edit A Grade</a>
 			<a class="nav-item nav-link" href="http://andrewaustin.pythonanywhere.com/roster">Class Roster <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="{{url_for('logout')}}">Log out</a>
 		</nav>
 		<div class="jumbotron text-center">
 			<h1 class="h1-hover-change">IS 668 - Edit a Student's Grade</h1>
@@ -40,9 +41,6 @@
 			That same grade already exists for that student/assignment... change the grade to something else. and we will update it accordingly.
 		</div>
 		{% endif %}
-		<div class="alert alert-warning" role="alert">
-			Please fill out grades for each assignment available for each student. Please make the assignment grade a 0 as a placeholder.
-		</div>
 		<form class="container-fluid" action="/edit_grades" method="POST">
 			<div class="form-group">
 				<label for="studID">Select the student's student ID.</label>
