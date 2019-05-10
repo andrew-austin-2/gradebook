@@ -40,12 +40,12 @@
 		<div class="alert alert-success" role="alert">
 			Successfully added a new student!
 		</div>
-		{% elif action == 2 %}
+		{% elif action == 2 %} <!-- this should be unused becuase of how we add grades whenever creating a student -->
 		<div class="alert alert-success" role="alert">
 			Successfully removed a student!
 		</div>
 		{% elif action == 3 %}
-		<div class="alert alert-danger" role="alert">
+		<div class="alert alert-success" role="alert">
 			Successfully removed a student and their grades!
 		</div>
 		{% elif action == 4 %}
@@ -53,7 +53,6 @@
 			No deletion made. You must make sure the student's data is correct with their corresponding Student ID. Please try again.
 		</div>
 		{% endif %}
-
 		<form class="container-fluid" action="/add_delete_student" method="POST">
 			<div class="form-group">
 				<label for="fNameInput">Enter First Name</label>
