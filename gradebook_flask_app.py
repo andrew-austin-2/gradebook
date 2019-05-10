@@ -103,6 +103,18 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+#austin
+@app.route('/student_lookup', methods=["GET", "POST"])
+def lookupStudent():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+    if request.method == 'GET':
+        return render_template("student_lookup.html", students=Student.query.all(), selectStudent="", studentGrades="")
+    studID = request.form["getStudId"]
+    student = Student.query.filter_by(studentId=studID).first()
+    studentGrades = Grade.query.filter_by(studentId=studID)
+    return render_template('student_lookup.html', students=Student.query.all(), selectStudent=student, studentGrades=studentGrades)
+
 #andrew
 @app.route('/roster', methods=["GET", "POST"])
 def roster():
@@ -161,6 +173,17 @@ def addDeleteStudent():
         student = Student(firstName=request.form["fNameInput"], lastName=request.form["lNameInput"], studentMajor=request.form["majorInput"], studentEmail=request.form["emailInput"])
         db.session.add(student)
         db.session.commit()
+
+        # after successfully adding a student, add a default grade for each assignment.
+        x = Assignment.query.count()
+        # couldn't figure out how to get the more efficient .max function to work, so ordering by descending and then getting first value.
+        newStudID = Student.query.order_by(Student.studentId.desc()).first()
+        newStudID = newStudID.studentId
+        for assignmentID in range(1, x+1):
+            changeGrade = Grade(studentId=newStudID, assignmentId=assignmentID)
+            db.session.add(changeGrade)
+        db.session.commit()
+
         action = 1 # action = 1 if you successfully add a user.
         return render_template('add_delete_student.html', action=action, students=Student.query.all())
     else:
