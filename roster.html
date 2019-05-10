@@ -15,13 +15,39 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
 			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 			crossorigin="anonymous"></script>
+		<!-- script to get the avg grade for overall grade. -->
+		<script type="text/javascript">
+            $(function () {
+                $('tbody tr').each(function () {
+                    //the value of sum needs to be reset for each row, so it has to be set inside the row loop
+                    var sum = 0
+                    var i = 0
+                    var avg = 0
+                    //find the grades elements in the current row and sum it.. and then get the avg
+                    $(this).find('.grades').each(function () {
+                        //uses a unary operator to add together
+                        //console.log($(this).text())
+                        //console.log("looking at each cell")
+                        sum += +$(this).text() || 0;
+                        //console.log(sum)
+                        //console.log("end of cell")
+                        i = i + 1
+                        avg = sum/i
+
+                    });
+                    //set the value of currents rows avg to the total grades element in the current row
+                    //console.log(sum);
+                    //console.log(i)
+                    //console.log("end of row")
+                    $('#total_grade', this).html(avg+"%");
+                });
+            });
+		</script>
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<title>Roster</title>
 	</head>
-	<!-- Add a nav bar to choose if you want to add students/assignments. -->
-	<!-- create the @app routes for users (be able to click on a user and send to page that has their information.-->
 	<body>
 		<nav class="navbar navbar-dark bg-dark">
 			<a class="navbar-brand" href="#">Click the dropdown menu on the right for more pages.</a>
@@ -33,12 +59,13 @@
 			<a class="nav-item nav-link" href="http://andrewaustin.pythonanywhere.com/add_delete_student">Add/Delete Student</a>
 			<a class="nav-item nav-link" href="http://andrewaustin.pythonanywhere.com/edit_grades">Edit A Grade</a>
 			<a class="nav-item nav-link active" href="http://andrewaustin.pythonanywhere.com/roster">Class Roster <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="{{url_for('logout')}}">Log out</a>
 		</nav>
 		<div class="jumbotron text-center">
 			<h1 class="h1-hover-change">IS 668 - Roster</h1>
 		</div>
 		<div class="container-fluid text-center">
-			<table class="table table-striped table-dark">
+			<table class="table table-striped table-dark" id="roster">
 				<thead>
 					<tr>
 						<th scope="col">Student ID </th>
@@ -49,6 +76,7 @@
 						{% for assignment in assignments %}
 						<th scope="col">{{ assignment.assignmentName }} (ID={{ assignment.assignmentId }})</th>
 						{% endfor %}
+						<th scope="col">Overall Grade (Average)</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -60,12 +88,13 @@
 						<td>{{ student.studentMajor }}</td>
 						<td>{{ student.studentEmail }}</td>
 						{% for grade in grades %}
-						{% if grade.studentId == student.studentId %}
-						<td>
-							{{ grade.grade }} <!-- helping debug {{grade.assignmentId}} -->
+						{% if grade.studentId == student.studentId  %}
+						<td class="grades">
+							{{- grade.grade -}}
 						</td>
 						{% endif %}
 						{% endfor %}
+						<td id="total_grade"></td>
 					</tr>
 					{% endfor %}
 				</tbody>
