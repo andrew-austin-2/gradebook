@@ -1,6 +1,3 @@
-
-# A very simple Flask Hello World app for you to get started with...
-
 from flask import Flask, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, LoginManager, logout_user, UserMixin, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -122,7 +119,7 @@ def roster():
         return redirect(url_for('index'))
     if request.method == 'GET':
         # grades will be ordered by the assignmentID so that no matter what order the assignments the students have are created in, it will be in the right order
-        return render_template("roster.html", students=Student.query.all(), grades=Grade.query.order_by(Grade.assignmentId).all(), assignments=Assignment.query.all())
+        return render_template("roster.html", students=Student.query.order_by(Student.firstName).all(), grades=Grade.query.order_by(Grade.assignmentId).all(), assignments=Assignment.query.all())
 
 #andrew
 @app.route('/edit_grades', methods=["GET", "POST"])
@@ -215,6 +212,4 @@ def addDeleteStudent():
             action = 4 # action = 4 if you couldn't delete the student because the info wasn't matching
             return render_template('add_delete_student.html', action=action, students=Student.query.all())
     return redirect(url_for('addDeleteStudent'))
-
-
 
