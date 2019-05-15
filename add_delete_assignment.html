@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"></script>
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<title>Add/Delete Assignment</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">Click the dropdown menu on the right for more pages.</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/add_delete_student">Add/Delete Student</a>
+			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/student_lookup">Student Lookup</a>
+			<a class="nav-item nav-link active" href="">Add/Delete Assignment <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/edit_grades">Edit A Grade</a>
+			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/roster">Class Roster</a>
+			<a class="nav-item nav-link" href="{{url_for('logout')}}">Log out</a>
+		</nav>
+		<div class="jumbotron text-center">
+			<h1 class="h1-hover-change">IS 668 - Add or Delete an Assignment</h1>
+		</div>
+		{% if action == 1 %}
+		<div class="alert alert-success" role="alert">
+			Successfully added a new assignment!
+		</div>
+		{% elif action == 2 %}
+		<div class="alert alert-success" role="alert">
+			Successfully removed an assignment!
+		</div>
+		{% elif action == 3 %}
+		<div class="alert alert-danger" role="alert">
+			No deletion made. You must make sure the assignment's data is correct with their corresponding Assignment ID. Please try again.
+		</div>
+		{% endif %}
+		<form class="container-fluid" action="/add_delete_assignment" method="POST">
+			<div class="form-group">
+				<label for="assignNameInput">Enter Assignment Name</label>
+				<input type="text" class="form-control" id="assignNameInput" name="assignNameInput" placeholder="Assignment's Name" required>
+			</div>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" name="addDelRad" id="addAssignRad" value="add" checked>
+				<label class="form-check-label" for="addAssignRad">
+				Add Assignment
+				</label>
+			</div>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" name="addDelRad" id="delAssignRad" value="delete">
+				<label class="form-check-label" for="delAssignRad">
+				Delete Assignment
+				</label>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="delAssignId">Select the Assignment ID you want to delete. <small>(if you leave the radio button on Add, the ID will be ignored)</small></label>
+				<select class="form-control" id="delAssignId" name="delAssignId">
+					{% for assignment in assignments %}
+					<option>{{ assignment.assignmentId }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary" id="addAssignmentBtn" onclick="assignmentEditFunc()">Add/Delete an Assignment</button>
+		</form>
+		<div class="container-fluid text-center">
+			<table class="table table-striped table-dark">
+				<!-- have a user enter a first and last name. search database.. if found, then ask if you want to delete student. if not found, ask if you want to add student -->
+				<thead>
+					<tr>
+						<th scope="col">Assignment ID</th>
+						<th scope="col">Assignment Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for assignment in assignments %}
+					<tr>
+						<th scope="row">{{ assignment.assignmentId }}</th>
+						<td>{{ assignment.assignmentName }}</td>
+						<td></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
