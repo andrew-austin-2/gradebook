@@ -79,6 +79,7 @@ def index():
         return render_template("main_page.html")
     return redirect(url_for('index'))
 
+#austin
 @app.route("/login/", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -94,6 +95,7 @@ def login():
     login_user(user)
     return redirect(url_for('index'))
 
+#austin
 @app.route("/logout/")
 @login_required
 def logout():
@@ -111,6 +113,54 @@ def lookupStudent():
     student = Student.query.filter_by(studentId=studID).first()
     studentGrades = Grade.query.filter_by(studentId=studID).order_by(Grade.assignmentId)
     return render_template('student_lookup.html', students=Student.query.all(), selectStudent=student, studentGrades=studentGrades, studentAssignments=Assignment.query.all())
+
+#austin
+@app.route("/add_delete_assignment", methods=["GET", "POST"])
+def addDeleteAssignment():
+    if not current_user.is_authenticated:
+        return redirect(url_for('index'))
+    action = 0
+    if request.method == 'GET':
+        return render_template("add_delete_assignment.html", assignments = Assignment.query.all())
+
+    if request.form["addDelRad"] == "add":
+        assignment = Assignment(assignmentName=request.form["assignNameInput"])
+        db.session.add(assignment)
+        db.session.commit()
+
+        # after successfully adding an assignment, add a default grade for each assignment.
+        newAssignID = Assignment.query.order_by(Assignment.assignmentId.desc()).first()
+        newAssignID = newAssignID.assignmentId
+        for student in Student.query.all():
+            newGrade = Grade(studentId=student.studentId, assignmentId=newAssignID)
+            db.session.add(newGrade)
+        db.session.commit()
+
+        action = 1 # action = 1 if you successfully add a assignment.
+        return render_template('add_delete_assignment.html', action=action, assignments=Assignment.query.all())
+    else:
+        delAssignId = request.form["delAssignId"]
+        deleteAssignment = Assignment.query.filter_by(assignmentId=delAssignId).first()
+
+        if deleteAssignment is not None:
+            # need to delete assignment from each entry in the grades table
+            gradeExist = Grade.query.filter_by(assignmentId=delAssignId).first()
+            while gradeExist is not None:
+                #go and delete all the records from Grade that are for the delAssignId
+                deleteGrades = gradeExist
+                db.session.delete(deleteGrades)
+                gradeExist = Grade.query.filter_by(assignmentId=delAssignId).first()
+            db.session.delete(deleteAssignment)
+            db.session.commit() # only commits after all the grades were deleted and the assignment was deleted.
+            action = 2 # action = 3 if you delete the student and their grades
+            return render_template('add_delete_assignment.html', action=action, assignments=Assignment.query.all())
+        else:
+            action = 3 # action = 3 if you couldn't delete the assignment because the info wasn't matching
+            return render_template('add_delete_assignment.html', action=action, assignments=Assignment.query.all())
+    return redirect(url_for('addDeleteAssignment'))
+
+
+
 
 #andrew
 @app.route('/roster', methods=["GET", "POST"])
