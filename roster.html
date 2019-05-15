@@ -28,11 +28,14 @@
                         //uses a unary operator to add together
                         //console.log($(this).text())
                         //console.log("looking at each cell")
-                        sum += +$(this).text() || 0;
-                        //console.log(sum)
-                        //console.log("end of cell")
-                        i = i + 1
-                        avg = sum/i
+                        // This if statement checks to see if the cell has None in it. If it does, the cell will be ignored for the overall grade.
+                        if ($(this).text() != "None"){
+                            sum += +$(this).text() || 0;
+                            //console.log(sum)
+                            //console.log("end of cell")
+                            i = i + 1
+                            avg = sum/i
+                        }
                     });
                     //set the value of currents rows avg to the total grades element in the current row
                     //console.log(sum);
@@ -57,8 +60,9 @@
 			<div class="navbar-nav">
 			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/add_delete_student">Add/Delete Student</a>
 			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/student_lookup">Student Lookup</a>
+			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/add_delete_assignment">Add/Delete Assignment</a>
 			<a class="nav-item nav-link" href="https://andrewaustin.pythonanywhere.com/edit_grades">Edit A Grade</a>
-			<a class="nav-item nav-link active" href="https://andrewaustin.pythonanywhere.com/roster">Class Roster <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link active" href="">Class Roster <span class="sr-only">(current)</span></a>
 			<a class="nav-item nav-link" href="{{url_for('logout')}}">Log out</a>
 		</nav>
 		<div class="jumbotron text-center">
