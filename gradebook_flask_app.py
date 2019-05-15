@@ -106,11 +106,11 @@ def lookupStudent():
     if not current_user.is_authenticated:
         return redirect(url_for('index'))
     if request.method == 'GET':
-        return render_template("student_lookup.html", students=Student.query.all(), selectStudent="", studentGrades="")
+        return render_template("student_lookup.html", students=Student.query.all(), selectStudent="", studentGrades="", studentAssignments="")
     studID = request.form["getStudId"]
     student = Student.query.filter_by(studentId=studID).first()
-    studentGrades = Grade.query.filter_by(studentId=studID)
-    return render_template('student_lookup.html', students=Student.query.all(), selectStudent=student, studentGrades=studentGrades)
+    studentGrades = Grade.query.filter_by(studentId=studID).order_by(Grade.assignmentId)
+    return render_template('student_lookup.html', students=Student.query.all(), selectStudent=student, studentGrades=studentGrades, studentAssignments=Assignment.query.all())
 
 #andrew
 @app.route('/roster', methods=["GET", "POST"])
