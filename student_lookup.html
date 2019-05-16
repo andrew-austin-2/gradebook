@@ -93,8 +93,8 @@
 						<th scope="col">Last Name</th>
 						<th scope="col">Major</th>
 						<th scope="col">Email Address</th>
-						{% for studentGrade in studentGrades %}
-						<th scope="col">{{ studentGrade.assignmentName }} (ID={{ studentGrade.assignmentId }})</th>
+						{% for assignment in studentAssignments %}
+						<th scope="col">{{ assignment.assignmentName }} (ID={{ assignment.assignmentId }})</th>
 						{% endfor %}
 						<th scope="col">Overall Grade (Average)</th>
 					</tr>
