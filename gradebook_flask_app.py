@@ -222,12 +222,12 @@ def addDeleteStudent():
         db.session.commit()
 
         # after successfully adding a student, add a default grade for each assignment.
-        x = Assignment.query.count()
+
         # couldn't figure out how to get the more efficient .max function to work, so ordering by descending and then getting first value.
         newStudID = Student.query.order_by(Student.studentId.desc()).first()
         newStudID = newStudID.studentId
-        for assignmentID in range(1, x+1):
-            changeGrade = Grade(studentId=newStudID, assignmentId=assignmentID)
+        for assignment in Assignment.query.all():
+            changeGrade = Grade(studentId=newStudID, assignmentId=assignment.assignmentId)
             db.session.add(changeGrade)
         db.session.commit()
 
